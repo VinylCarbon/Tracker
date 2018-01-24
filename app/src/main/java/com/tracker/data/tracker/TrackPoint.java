@@ -1,11 +1,11 @@
-package com.tracker.ui.tracker;
+package com.tracker.data.tracker;
 
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-abstract class TrackPoint {
+public abstract class TrackPoint {
 
     abstract double latitude();
 

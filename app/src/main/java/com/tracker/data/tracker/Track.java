@@ -1,4 +1,4 @@
-package com.tracker.ui.tracker;
+package com.tracker.data.tracker;
 
 import android.support.annotation.NonNull;
 
@@ -7,7 +7,7 @@ import com.google.auto.value.AutoValue;
 import java.util.List;
 
 @AutoValue
-abstract class Track {
+public abstract class Track {
 
     abstract long id();
 
