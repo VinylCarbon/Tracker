@@ -96,8 +96,11 @@ dependencies {
     // Timber
     api commonDependencies.timber
 
-    // Chart
-    api commonDependencies.chart
+    // RxPermission
+    api commonDependencies.rxPermission
+
+    // Reactive Location
+    api commonDependencies.reactiveLocation
 
     // Stetho
     implementation developmentDependencies.stetho
