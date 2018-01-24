@@ -18,4 +18,10 @@ public class TrackerViewModelModule {
                                                               TrackerViewModel trackerViewModel) {
         return viewModelUtil.createFor(trackerViewModel);
     }
+
+    @Singleton
+    @Provides
+    LocationProvider locationProvider(){
+        return new MockLocationProvider();
+    }
 }

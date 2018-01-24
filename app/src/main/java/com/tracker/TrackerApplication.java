@@ -7,7 +7,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
 
 
-public class TrackerAppication extends DaggerApplication {
+public class TrackerApplication extends DaggerApplication {
 
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
