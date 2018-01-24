@@ -1,5 +1,7 @@
 package com.tracker.ui.tracker;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -14,7 +16,10 @@ import javax.inject.Inject;
 
 public class TrackerFragment extends BaseFragment {
 
-    TrackerViewModel viewModel;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+
+    TrackerViewModel trackerViewModel;
 
     @Override
     protected int getLayoutId() {
@@ -28,6 +33,7 @@ public class TrackerFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        trackerViewModel = ViewModelProviders.of(this, viewModelFactory).get(TrackerViewModel.class);
     }
 
     @Override
@@ -45,10 +51,10 @@ public class TrackerFragment extends BaseFragment {
     }
 
     void startTracking() {
-        viewModel.startTracking();
+        trackerViewModel.startTracking();
     }
 
     void stopTracking() {
-        viewModel.stopTracking();
+        trackerViewModel.stopTracking();
     }
 }
