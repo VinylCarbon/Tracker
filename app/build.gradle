@@ -11,6 +11,9 @@ android {
         targetSdkVersion androidVersions.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "DB_NAME", tracker_db_name
+        buildConfigField "int", "DB_VERSION", tracker_db_version
     }
 
     buildTypes {
