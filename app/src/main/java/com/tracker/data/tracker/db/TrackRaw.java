@@ -15,7 +15,8 @@ public class TrackRaw {
 
     private long finishTime;
 
-    public TrackRaw(){}
+    public TrackRaw() {
+    }
 
     private TrackRaw(Builder builder) {
         setId(builder.id);
@@ -64,6 +65,11 @@ public class TrackRaw {
         private long finishTime;
 
         public Builder() {
+        }
+
+        public Builder id(long val) {
+            id = val;
+            return this;
         }
 
         public Builder name(String val) {

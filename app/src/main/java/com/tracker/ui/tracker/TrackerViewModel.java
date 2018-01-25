@@ -15,6 +15,7 @@ import com.tracker.domain.tracker.SendTrackingState;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import polanski.option.Option;
@@ -23,6 +24,8 @@ import static polanski.option.Option.none;
 
 
 public class TrackerViewModel extends ViewModel {
+
+    private TrackingState trackingState = TrackingState.NOT_TRACKING;
 
     @NonNull
     private final LocationProvider locationProvider;
@@ -56,27 +59,36 @@ public class TrackerViewModel extends ViewModel {
         this.retrieveTrackPoint = retrieveTrackPoint;
         this.retrieveTrack = retrieveTrack;
         this.sendTrackingState = sendTrackingState;
-
-        startTrackUpdates();
-        bindTracker();
     }
 
     private void startTrackUpdates() {
+        bindTracker();
         locationProvider.startService();
     }
 
     private void bindTracker() {
         compositeDisposable.add(retrieveTrackingState.getBehaviourStream(none())
-                .observeOn(Schedulers.computation())
-                .subscribe(trackingStateLiveData::postValue));
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setTrackingStateLiveData));
 
         compositeDisposable.add(retrieveTrackPoint.getBehaviourStream(none())
-                .observeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(trackPointLiveData::postValue));
 
         compositeDisposable.add(retrieveTrack.getBehaviourStream(none())
-                .observeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(trackLiveData::postValue));
+    }
+
+    private void setTrackingStateLiveData(@NonNull TrackingState trackingState) {
+        this.trackingState = trackingState;
+        if (trackingState.isTracking()) trackingStarted();
+        else trackingStopped();
+
+        trackingStateLiveData.postValue(trackingState);
     }
 
     @NonNull
@@ -95,26 +107,39 @@ public class TrackerViewModel extends ViewModel {
     }
 
     void startTracking() {
+        startLocationUpdates();
         compositeDisposable.add(sendTrackingState
                 .getSingle(Option.ofObj(TrackingState.TRACKING))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(__ -> trackingStarted()));
     }
 
-    void stopTracking() {
+    void finishTracking() {
         compositeDisposable.add(sendTrackingState
-                .getSingle(Option.ofObj(TrackingState.TRACKING))
+                .getSingle(Option.ofObj(TrackingState.NOT_TRACKING))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(__ -> trackingStopped()));
     }
 
     private void trackingStarted() {
+        locationProvider.showTrackingForeground();
     }
 
     private void trackingStopped() {
+        locationProvider.hideTrackingForeground();
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
+        if (!trackingState.isTracking())
+            locationProvider.stopService();
         compositeDisposable.dispose();
+    }
+
+    public void startLocationUpdates() {
+        startTrackUpdates();
     }
 }

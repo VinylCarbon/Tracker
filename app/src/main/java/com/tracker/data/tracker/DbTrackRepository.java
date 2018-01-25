@@ -2,7 +2,6 @@ package com.tracker.data.tracker;
 
 import android.support.annotation.NonNull;
 
-import com.google.common.collect.Lists;
 import com.tracker.common.providers.TimestampProvider;
 import com.tracker.common.providers.TrackNameProvider;
 import com.tracker.data.tracker.db.TrackDao;
@@ -10,21 +9,25 @@ import com.tracker.data.tracker.db.TrackPointDao;
 import com.tracker.data.tracker.db.TrackPointRaw;
 import com.tracker.data.tracker.db.TrackRaw;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.subjects.PublishSubject;
 import polanski.option.Option;
 
 import static com.tracker.data.tracker.TrackingState.NOT_TRACKING;
 import static com.tracker.data.tracker.TrackingState.TRACKING;
+import static polanski.option.Option.none;
 import static polanski.option.OptionUnsafe.getUnsafe;
 
 class DbTrackRepository implements TrackRepository {
     @NonNull
-    Option<TrackPoint> trackPoint = Option.none();
+    Option<TrackPoint> trackPoint = none();
     @NonNull
-    Option<Track> activeTrack = Option.none();
+    Option<Track> activeTrack = none();
     @NonNull
     TrackingState trackingState = NOT_TRACKING;
 
@@ -62,33 +65,47 @@ class DbTrackRepository implements TrackRepository {
     }
 
     @Override
-    public void addTrackPoint(TrackPoint trackPoint) {
-        this.trackPoint = Option.ofObj(trackPoint);
-        trackPointSubject.onNext(trackPoint);
+    public Single<Boolean> addTrackPoint(TrackPoint trackPoint) {
+        return Observable.fromCallable(() -> {
+            this.trackPoint = Option.ofObj(trackPoint);
+            trackPointSubject.onNext(trackPoint);
 
-        if (trackingState.isTracking())
-            addToTrack(trackPoint);
+            if (trackingState.isTracking())
+                addToTrack(trackPoint);
+            return Boolean.TRUE;
+        }).single(Boolean.FALSE);
     }
 
     @Override
+    public Single<Boolean> setTrackingState(boolean tracking) {
+        return Observable.fromCallable(() -> {
+            if (tracking) startTracking();
+            else stopTracking();
+            return Boolean.TRUE;
+        }).single(Boolean.FALSE);
+    }
+
     public void startTracking() {
+        trackingState = TRACKING;
         trackingStateSubject.onNext(TRACKING);
         TrackRaw trackRaw = createAndInsertTrack();
 
         activeTrack = Option.ofObj(track(trackRaw));
     }
 
-    @NonNull
-    private TrackRaw createAndInsertTrack() {
-        TrackRaw trackRaw = createTrackRaw();
-        long id = trackDao.insert(trackRaw);
-        trackRaw.setId(id);
-        return trackRaw;
+    public void stopTracking() {
+        trackingState = NOT_TRACKING;
+        trackingFinished();
+        trackingStateSubject.onNext(NOT_TRACKING);
     }
 
-    @Override
-    public void stopTracking() {
-        trackingStateSubject.onNext(NOT_TRACKING);
+    private void trackingFinished() {
+        activeTrack.ifSome(track -> trackDao.update(new TrackRaw.Builder()
+                .id(track.id())
+                .name(track.name())
+                .startTime(track.startTime())
+                .finishTime(timestampProvider.currentTimeMillis())
+                .build()));
     }
 
     private void addToTrack(TrackPoint trackPoint) {
@@ -98,6 +115,14 @@ class DbTrackRepository implements TrackRepository {
 
             trackPointDao.insert(trackPointRaw(trackPoint));
         }
+    }
+
+    @NonNull
+    private TrackRaw createAndInsertTrack() {
+        TrackRaw trackRaw = createTrackRaw();
+        long id = trackDao.insert(trackRaw);
+        trackRaw.setId(id);
+        return trackRaw;
     }
 
     private TrackRaw createTrackRaw() {
@@ -112,6 +137,8 @@ class DbTrackRepository implements TrackRepository {
                 .id(trackRaw.getId())
                 .name(trackRaw.getName())
                 .startTime(trackRaw.getStartTime())
+                .finishTime(0)
+                .trackPoints(new ArrayList<>())
                 .build();
     }
 

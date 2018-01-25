@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import io.reactivex.Single;
 import polanski.option.Option;
 
-public class SendTrackingState implements ReactiveInteractor.SendInteractor<TrackingState, Void> {
+import static polanski.option.OptionUnsafe.getUnsafe;
+
+public class SendTrackingState implements ReactiveInteractor.SendInteractor<TrackingState, Boolean> {
 
     @NonNull
     private final TrackRepository trackRepository;
@@ -24,7 +26,7 @@ public class SendTrackingState implements ReactiveInteractor.SendInteractor<Trac
 
     @Nonnull
     @Override
-    public Single<Void> getSingle(@Nonnull Option<TrackingState> params) {
-        return null;
+    public Single<Boolean> getSingle(@Nonnull Option<TrackingState> params) {
+        return trackRepository.setTrackingState(getUnsafe(params).isTracking());
     }
 }

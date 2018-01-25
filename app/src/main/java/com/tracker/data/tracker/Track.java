@@ -9,17 +9,17 @@ import java.util.List;
 @AutoValue
 public abstract class Track {
 
-    abstract long id();
+    public abstract long id();
 
     @NonNull
-    abstract String name();
+    public abstract String name();
 
-    abstract long startTime();
+    public abstract long startTime();
 
-    abstract long finishTime();
+    public abstract long finishTime();
 
     @NonNull
-    abstract List<TrackPoint> trackPoints();
+    public abstract List<TrackPoint> trackPoints();
 
     @NonNull
     public static Track.Builder builder() {

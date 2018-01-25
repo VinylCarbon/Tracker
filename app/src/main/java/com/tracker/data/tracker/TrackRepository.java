@@ -1,6 +1,8 @@
 package com.tracker.data.tracker;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import polanski.option.Option;
 
 public interface TrackRepository {
 
@@ -10,9 +12,7 @@ public interface TrackRepository {
 
     Observable<TrackingState> trackingState();
 
-    void addTrackPoint(TrackPoint trackPoint);
+    Single<Boolean> addTrackPoint(TrackPoint trackPoint);
 
-    void startTracking();
-
-    void stopTracking();
+    Single<Boolean> setTrackingState(boolean tracking);
 }
