@@ -5,7 +5,7 @@ ext {
                compileSdkVersion: 26]
 
     db = [
-            tracker_db_name = "tracker-db",
+            tracker_db_name = "\"tracker-db\"",
             tracker_db_version = "1"
     ]
 }

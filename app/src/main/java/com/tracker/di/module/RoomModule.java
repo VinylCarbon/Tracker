@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.tracker.BuildConfig;
 import com.tracker.data.TrackerDatabase;
 import com.tracker.data.tracker.db.TrackDao;
+import com.tracker.data.tracker.db.TrackPointDao;
 import com.tracker.di.qualifiers.ForApplication;
 
 import javax.inject.Named;
@@ -35,5 +36,11 @@ public class RoomModule {
     @Provides
     TrackDao trackDao(@NonNull TrackerDatabase trackerDatabase) {
         return trackerDatabase.trackDao();
+    }
+
+    @Singleton
+    @Provides
+    TrackPointDao trackPointDao(@NonNull TrackerDatabase trackerDatabase) {
+        return trackerDatabase.trackPointDao();
     }
 }

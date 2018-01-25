@@ -2,6 +2,9 @@ package com.tracker.data.tracker;
 
 import android.support.annotation.NonNull;
 
+import com.tracker.data.tracker.db.TrackDao;
+import com.tracker.data.tracker.db.TrackPointDao;
+
 import io.reactivex.Observable;
 import polanski.option.Option;
 
@@ -10,6 +13,14 @@ class DbTrackRepository implements TrackRepository {
     Option<TrackPoint> trackPoint = Option.none();
     @NonNull
     TrackingState trackingState = TrackingState.NOT_TRACKING;
+
+    private TrackDao trackDao;
+    private TrackPointDao trackPointDao;
+
+    public DbTrackRepository(TrackDao trackDao, TrackPointDao trackPointDao) {
+        this.trackDao = trackDao;
+        this.trackPointDao = trackPointDao;
+    }
 
     @Override
     public Observable<TrackPoint> trackPoint() {
