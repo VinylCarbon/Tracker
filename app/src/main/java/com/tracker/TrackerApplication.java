@@ -9,10 +9,16 @@ import dagger.android.support.DaggerApplication;
 
 public class TrackerApplication extends DaggerApplication {
 
+    private static AppComponent appComponent;
+
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-        AppComponent appComponent = DaggerAppComponent.builder().application(this).build();
+        appComponent = DaggerAppComponent.builder().application(this).build();
         appComponent.inject(this);
+        return appComponent;
+    }
+
+    public static AppComponent appComponent() {
         return appComponent;
     }
 }
