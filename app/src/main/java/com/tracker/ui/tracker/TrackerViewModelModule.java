@@ -1,7 +1,10 @@
 package com.tracker.ui.tracker;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.tracker.di.qualifiers.ForApplication;
 import com.tracker.ui.util.ViewModelUtil;
 
 import javax.inject.Singleton;
@@ -21,7 +24,7 @@ public class TrackerViewModelModule {
 
     @Singleton
     @Provides
-    LocationProvider locationProvider(){
-        return new MockLocationProvider();
+    LocationProvider locationProvider(@NonNull @ForApplication Context context) {
+        return new MockLocationProvider(context);
     }
 }

@@ -46,7 +46,7 @@ public class TrackerViewModel extends ViewModel {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
-    TrackerViewModel(@NonNull LocationProvider locationProvider,
+    TrackerViewModel(@NonNull final LocationProvider locationProvider,
                      @NonNull final RetrieveTrackingState retrieveTrackingState,
                      @NonNull final RetrieveTrackPoint retrieveTrackPoint,
                      @NonNull final RetrieveTrack retrieveTrack,

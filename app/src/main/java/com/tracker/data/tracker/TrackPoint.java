@@ -7,11 +7,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class TrackPoint {
 
-    abstract double latitude();
+    public abstract double latitude();
 
-    abstract double longitude();
+    public abstract double longitude();
 
-    abstract long timestamp();
+    public abstract long timestamp();
 
     @NonNull
     public static TrackPoint.Builder builder() {
@@ -19,7 +19,7 @@ public abstract class TrackPoint {
     }
 
     @AutoValue.Builder
-    interface Builder {
+    public interface Builder {
 
         TrackPoint.Builder latitude(final double latitude);
 
