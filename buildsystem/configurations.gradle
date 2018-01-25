@@ -8,4 +8,8 @@ ext {
             tracker_db_name = "\"tracker-db\"",
             tracker_db_version = "1"
     ]
+
+    map = [
+            maps_api_key = "\"AIzaSyAyUtz3uNh8Y7MCjz6w970a9sZDBv_qR7Q\""
+    ]
 }
