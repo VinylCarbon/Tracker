@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class TrackRaw {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     private String name;
@@ -14,6 +14,15 @@ public class TrackRaw {
     private long startTime;
 
     private long finishTime;
+
+    public TrackRaw(){}
+
+    private TrackRaw(Builder builder) {
+        setId(builder.id);
+        setName(builder.name);
+        setStartTime(builder.startTime);
+        setFinishTime(builder.finishTime);
+    }
 
     public long getId() {
         return id;
@@ -45,5 +54,35 @@ public class TrackRaw {
 
     public void setFinishTime(long finishTime) {
         this.finishTime = finishTime;
+    }
+
+
+    public static final class Builder {
+        private long id;
+        private String name;
+        private long startTime;
+        private long finishTime;
+
+        public Builder() {
+        }
+
+        public Builder name(String val) {
+            name = val;
+            return this;
+        }
+
+        public Builder startTime(long val) {
+            startTime = val;
+            return this;
+        }
+
+        public Builder finishTime(long val) {
+            finishTime = val;
+            return this;
+        }
+
+        public TrackRaw build() {
+            return new TrackRaw(this);
+        }
     }
 }

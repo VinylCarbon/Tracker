@@ -6,12 +6,14 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface TrackPointDao {
 
     @Insert
-    void insert(TrackPointRaw... trackPointRaws);
+    void insert(TrackPointRaw trackPointRaw);
 
     @Query("SELECT * FROM TRACKPOINTRAW WHERE trackId = :trackId")
-    List<TrackPointRaw> allTrackPoints(long trackId);
+    Flowable<List<TrackPointRaw>> allTrackPoints(long trackId);
 }

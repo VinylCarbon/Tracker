@@ -11,4 +11,8 @@ public interface TrackRepository {
     Observable<TrackingState> trackingState();
 
     void addTrackPoint(TrackPoint trackPoint);
+
+    void startTracking();
+
+    void stopTracking();
 }
