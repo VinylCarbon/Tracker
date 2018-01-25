@@ -50,6 +50,7 @@ dependencies {
 
     // Room
     implementation commonDependencies.roomRuntime
+    implementation commonDependencies.roomRxJava
     annotationProcessor commonDependencies.roomCompiler
     androidTestImplementation commonDependencies.roomTesting
 
