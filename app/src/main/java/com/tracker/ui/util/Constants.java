@@ -10,6 +10,8 @@ public interface Constants {
 
         String START_TRACKER_ACTION_FOREGROUND = "com.tracker.ui.tracker.TrackerService.action.starttracker_foreground";
         String STOP_TRACKER_ACTION_FOREGROUND = "com.tracker.ui.tracker.TrackerService.action.stoptracker_foreground";
+
+        String FINISH_TRACKING_ACTION = "com.tracker.ui.tracker.TrackerService.action.finishtracking";
     }
 
     interface NOTIFICATION_ID {
