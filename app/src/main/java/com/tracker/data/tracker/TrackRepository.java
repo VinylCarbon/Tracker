@@ -1,8 +1,9 @@
 package com.tracker.data.tracker;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import polanski.option.Option;
 
 public interface TrackRepository {
 
@@ -15,4 +16,6 @@ public interface TrackRepository {
     Single<Boolean> addTrackPoint(TrackPoint trackPoint);
 
     Single<Boolean> setTrackingState(boolean tracking);
+
+    Observable<List<Track>> allTracks();
 }

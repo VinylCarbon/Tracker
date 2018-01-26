@@ -10,6 +10,7 @@ import com.tracker.data.tracker.db.TrackPointRaw;
 import com.tracker.data.tracker.db.TrackRaw;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -83,6 +84,16 @@ class DbTrackRepository implements TrackRepository {
             else stopTracking();
             return Boolean.TRUE;
         }).single(Boolean.FALSE);
+    }
+
+    @Override
+    public Observable<List<Track>> allTracks() {
+        return trackDao.allTracks()
+                .toObservable()
+                .flatMap(Observable::fromIterable)
+                .map(this::track)
+                .toList()
+                .toObservable();
     }
 
     public void startTracking() {
