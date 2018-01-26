@@ -107,6 +107,10 @@ dependencies {
     // Reactive Location
     api commonDependencies.reactiveLocation
 
+    // Butterknife
+    api commonDependencies.butterKnife
+    annotationProcessor commonDependencies.butterKnifeCompiler
+
     // Stetho
     implementation developmentDependencies.stetho
     implementation developmentDependencies.stethoOkHttp

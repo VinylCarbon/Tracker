@@ -27,6 +27,7 @@ ext {
     roomVersion = '1.0.0'
     rxPermission = '0.9.5@aar'
     reactiveLocation = '2.1'
+    butterKnife = '8.8.1'
 
     // Instrumentation
     stetho = '1.5.0'
@@ -86,7 +87,10 @@ ext {
 
                           rxPermission           : "com.tbruyelle.rxpermissions2:rxpermissions:${rxPermission}",
 
-                          reactiveLocation       : "pl.charmas.android:android-reactive-location2:${reactiveLocation}"]
+                          reactiveLocation       : "pl.charmas.android:android-reactive-location2:${reactiveLocation}",
+
+                          butterKnife            : "com.jakewharton:butterknife:${butterKnife}",
+                          butterKnifeCompiler    : "com.jakewharton:butterknife-compiler:${butterKnife}"]
 
     commonTestDependencies = [junit  : "junit:junit:${junit}",
                               assertj: "org.assertj:assertj-core:${assertJ}",
