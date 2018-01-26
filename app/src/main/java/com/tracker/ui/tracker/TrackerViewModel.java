@@ -45,8 +45,7 @@ public class TrackerViewModel extends ViewModel {
     @NonNull
     private final MutableLiveData<Track> trackLiveData = new MutableLiveData<>();
 
-    @NonNull
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable compositeDisposable;
 
     @Inject
     TrackerViewModel(@NonNull final LocationProvider locationProvider,
@@ -62,7 +61,10 @@ public class TrackerViewModel extends ViewModel {
     }
 
     private void startTrackUpdates() {
-        bindTracker();
+        if (compositeDisposable == null || compositeDisposable.isDisposed()) {
+            compositeDisposable = new CompositeDisposable();
+            bindTracker();
+        }
         locationProvider.startService();
     }
 
@@ -75,12 +77,16 @@ public class TrackerViewModel extends ViewModel {
         compositeDisposable.add(retrieveTrackPoint.getBehaviourStream(none())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(trackPointLiveData::postValue));
+                .subscribe(trackPoint -> setTrackPoint(trackPoint)));
 
         compositeDisposable.add(retrieveTrack.getBehaviourStream(none())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(trackLiveData::postValue));
+    }
+
+    private void setTrackPoint(TrackPoint trackPoint) {
+        trackPointLiveData.postValue(trackPoint);
     }
 
     private void setTrackingStateLiveData(@NonNull TrackingState trackingState) {
@@ -112,7 +118,7 @@ public class TrackerViewModel extends ViewModel {
                 .getSingle(Option.ofObj(TrackingState.TRACKING))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(__ -> trackingStarted()));
+                .subscribe());
     }
 
     void finishTracking() {
@@ -120,7 +126,7 @@ public class TrackerViewModel extends ViewModel {
                 .getSingle(Option.ofObj(TrackingState.NOT_TRACKING))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(__ -> trackingStopped()));
+                .subscribe());
     }
 
     private void trackingStarted() {
