@@ -25,6 +25,6 @@ public class TrackerViewModelModule {
     @Singleton
     @Provides
     LocationProvider locationProvider(@NonNull @ForApplication Context context) {
-        return new MockLocationProvider(context);
+        return new ReactiveGpsLocationProvider(context);
     }
 }
