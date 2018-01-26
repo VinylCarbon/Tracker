@@ -1,15 +1,13 @@
-package com.tracker.ui.home;
+package com.tracker.ui.tracks;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tracker.R;
 import com.tracker.ui.base.BaseActivity;
-import com.tracker.ui.tracker.TrackerFragment;
-import com.tracker.ui.tracks.TracksActivity;
 
 import javax.inject.Inject;
 
@@ -20,11 +18,9 @@ import polanski.option.Option;
 
 import static com.tracker.utils.ActivityUtils.addFragmentToActivity;
 
-
-public class HomeActivity extends BaseActivity {
-
+public class TracksActivity extends BaseActivity {
     @Inject
-    Lazy<TrackerFragment> trackerFragmentLazy;
+    Lazy<TracksFragment> tracksFragmentLazy;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -32,23 +28,27 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Option.ofObj(savedInstanceState).ifNone(this::showTrackerFragment);
+        Option.ofObj(savedInstanceState).ifNone(this::showTracksFragment);
         init();
     }
 
     private void init() {
         ButterKnife.bind(this);
-        toolbar.setTitle(getString(R.string.app_name));
-        toolbar.inflateMenu(R.menu.home);
-        toolbar.setOnMenuItemClickListener(this::optionMenuSelected);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("All Tracks");
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private boolean optionMenuSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.all_tracks) {
-            startActivity(new Intent(this, TracksActivity.class));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
             return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -56,7 +56,8 @@ public class HomeActivity extends BaseActivity {
         return R.layout.activity_container;
     }
 
-    private void showTrackerFragment() {
-        addFragmentToActivity(getSupportFragmentManager(), trackerFragmentLazy.get(), R.id.container);
+    private void showTracksFragment() {
+        addFragmentToActivity(getSupportFragmentManager(), tracksFragmentLazy.get(), R.id.container);
     }
+
 }
