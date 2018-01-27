@@ -87,12 +87,15 @@ class DbTrackRepository implements TrackRepository {
     }
 
     @Override
-    public Single<List<Track>> allTracks() {
+    public Observable<List<Track>> allTracks() {
         return trackDao.allTracks()
                 .toObservable()
-                .flatMap(Observable::fromIterable)
-                .map(this::track)
-                .toList();
+                .map(trackRaws ->
+                        Observable.fromIterable(trackRaws)
+                                .map(this::track)
+                                .toList()
+                                .blockingGet());
+
     }
 
     public void startTracking() {

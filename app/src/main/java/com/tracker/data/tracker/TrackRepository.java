@@ -17,5 +17,5 @@ public interface TrackRepository {
 
     Single<Boolean> setTrackingState(boolean tracking);
 
-    Single<List<Track>> allTracks();
+    Observable<List<Track>> allTracks();
 }
