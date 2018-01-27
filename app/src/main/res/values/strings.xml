@@ -3,4 +3,5 @@
     <string name="tracking">Tracking</string>
     <string name="tracks_empty">No tracks to display.</string>
     <string name="menu_all_tracks">All Tracks</string>
+    <string name="track_formatted_time">From: {{from}} - {{to}}</string>
 </resources>
