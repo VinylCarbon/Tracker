@@ -16,6 +16,9 @@ abstract class TrackViewEntity {
     abstract String formattedCreatedOn();
 
     @NonNull
+    abstract String formattedTime();
+
+    @NonNull
     abstract String formattedStartTime();
 
     @NonNull
@@ -46,6 +49,8 @@ abstract class TrackViewEntity {
         public abstract Builder formattedDistance(String formattedDistance);
 
         public abstract Builder formattedSpeed(String formattedSpeed);
+
+        public abstract Builder formattedTime(String formattedTime);
 
         public abstract TrackViewEntity build();
     }

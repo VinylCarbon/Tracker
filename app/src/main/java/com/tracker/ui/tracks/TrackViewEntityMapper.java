@@ -1,6 +1,7 @@
 package com.tracker.ui.tracks;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.tracker.R;
 import com.tracker.common.utils.TimeUtils;
@@ -14,7 +15,7 @@ import io.reactivex.functions.Function;
 class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
 
     private final String TRACK_DATE_FORMAT_CREATED_ON = "MMM dd yy";
-    private final String TRACK_TIME_FORMAT = "HH:mm a";
+    private final String TRACK_TIME_FORMAT = "hh:mm a";
 
     @Inject
     StringProvider stringProvider;
@@ -31,11 +32,19 @@ class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
                 .id(track.id())
                 .name(track.name())
                 .formattedCreatedOn(mapToFormattedCreatedOn(track.startTime()))
+                .formattedTime(mapToEntityFormattedTime(track))
                 .formattedStartTime(mapToFormattedTime(track.startTime()))
                 .formattedFinishTime(mapToFormattedFinishTime(track.startTime()))
                 .formattedDistance(mapToFormattedDistance(track))
                 .formattedSpeed(mapToFormattedSpeed(track))
                 .build();
+    }
+
+    @NonNull
+    private String mapToEntityFormattedTime(@NonNull final Track track) {
+        return stringProvider.getStringAndApplySubstitutions(R.string.track_formatted_time,
+                Pair.create("from", mapToFormattedTime(track.startTime())),
+                Pair.create("to", mapToFormattedFinishTime(track.finishTime())));
     }
 
     @NonNull
@@ -62,6 +71,6 @@ class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
     @NonNull
     private String mapToFormattedSpeed(Track track) {
         // TODO: calculate speed.
-        return null;
+        return "";
     }
 }
