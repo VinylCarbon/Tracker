@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.tracker.R;
 import com.tracker.di.qualifiers.ForApplication;
@@ -15,9 +16,19 @@ import com.tracker.ui.recyclerview.ViewHolderFactory;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TrackViewHolder extends RecyclerView.ViewHolder {
+
+    @BindView(R.id.track_name)
+    TextView trackName;
+    @BindView(R.id.track_time)
+    TextView trackTime;
+    @BindView(R.id.track_distance)
+    TextView trackDistance;
+    @BindView(R.id.track_speed)
+    TextView trackSpeed;
 
     public TrackViewHolder(View itemView) {
         super(itemView);
@@ -25,6 +36,10 @@ public class TrackViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void bind(@NonNull final TrackViewEntity viewEntity) {
+        trackName.setText(viewEntity.name());
+        trackTime.setText(viewEntity.formattedTime());
+        trackDistance.setText(viewEntity.formattedDistance());
+        trackSpeed.setText(viewEntity.formattedSpeed());
     }
 
     static class TrackHolderFactory extends ViewHolderFactory {
@@ -51,7 +66,7 @@ public class TrackViewHolder extends RecyclerView.ViewHolder {
         @Override
         public void bind(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull DisplayableItem item) {
             TrackViewHolder trackViewHolder = TrackViewHolder.class.cast(viewHolder);
-            TrackViewEntity trackViewEntity = TrackViewEntity.class.cast(item);
+            TrackViewEntity trackViewEntity = TrackViewEntity.class.cast(item.model());
             trackViewHolder.bind(trackViewEntity);
         }
     }
