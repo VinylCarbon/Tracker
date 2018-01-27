@@ -27,6 +27,6 @@ public class RetrieveTracks implements ReactiveInteractor.RetrieveInteractor<Voi
     @Nonnull
     @Override
     public Observable<List<Track>> getBehaviourStream(@Nonnull final Option<Void> params) {
-        return null;
+        return trackRepository.allTracks().toObservable();
     }
 }
