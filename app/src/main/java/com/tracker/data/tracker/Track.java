@@ -27,7 +27,7 @@ public abstract class Track {
     }
 
     @AutoValue.Builder
-    interface Builder {
+    public interface Builder {
 
         Track.Builder id(final long id);
 
