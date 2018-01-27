@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.PublishSubject;
@@ -87,13 +88,8 @@ class DbTrackRepository implements TrackRepository {
     }
 
     @Override
-    public Observable<List<Track>> allTracks() {
-        return trackDao.allTracks()
-                .toObservable()
-                .flatMap(Observable::fromIterable)
-                .map(this::track)
-                .toList()
-                .toObservable();
+    public Flowable<List<TrackRaw>> allTracks() {
+        return trackDao.allTracks();
     }
 
     public void startTracking() {
@@ -148,7 +144,7 @@ class DbTrackRepository implements TrackRepository {
                 .id(trackRaw.getId())
                 .name(trackRaw.getName())
                 .startTime(trackRaw.getStartTime())
-                .finishTime(0)
+                .finishTime(trackRaw.getFinishTime())
                 .trackPoints(new ArrayList<>())
                 .build();
     }

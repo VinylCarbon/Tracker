@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
+import com.tracker.data.tracker.TrackRepository;
+import com.tracker.data.tracker.db.TrackRaw;
 import com.tracker.domain.tracks.RetrieveTracks;
 import com.tracker.ui.recyclerview.DisplayableItem;
 
@@ -12,12 +14,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import polanski.option.Option;
 
 public class TracksViewModel extends ViewModel {
+
+    private TrackRepository trackRepository;
 
     @NonNull
     private final RetrieveTracks retrieveTracks;
@@ -32,8 +36,10 @@ public class TracksViewModel extends ViewModel {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
-    public TracksViewModel(@NonNull final RetrieveTracks retrieveTracks,
+    public TracksViewModel(@NonNull final TrackRepository trackRepository,
+                           @NonNull final RetrieveTracks retrieveTracks,
                            @NonNull final TrackDisplayableItemMapper tacksDisplayableItemMapper) {
+        this.trackRepository = trackRepository;
         this.retrieveTracks = retrieveTracks;
         this.tacksDisplayableItemMapper = tacksDisplayableItemMapper;
 
@@ -41,10 +47,19 @@ public class TracksViewModel extends ViewModel {
     }
 
     private Disposable bindToTracks() {
-        return retrieveTracks.getBehaviourStream(Option.none())
-                .observeOn(Schedulers.computation())
-                .map(tacksDisplayableItemMapper)
-                .subscribe(this::saveTracks);
+        return trackRepository
+                .allTracks()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::tracksFound);
+    }
+
+    private void tracksFound(List<TrackRaw> trackRaws) {
+        try {
+            saveTracks(tacksDisplayableItemMapper.apply(trackRaws));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveTracks(List<DisplayableItem> displayableItems) {
