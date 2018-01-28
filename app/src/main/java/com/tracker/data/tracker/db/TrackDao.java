@@ -25,6 +25,6 @@ public interface TrackDao {
     @Query("SELECT * FROM TRACKRAW WHERE finishTime = 0 LIMIT 1")
     Flowable<TrackRaw> activeTrack();
 
-    @Query("SELECT * FROM TRACKRAW")
+    @Query("SELECT * FROM TRACKRAW ORDER BY id DESC")
     Flowable<List<TrackRaw>> allTracks();
 }
