@@ -35,8 +35,6 @@ public class TracksFragment extends BaseFragment {
     TracksViewModel tracksViewModel;
 
 
-    @BindView(R.id.refresh)
-    SwipeRefreshLayout refresh;
     @BindView(R.id.tracks)
     RecyclerView trackList;
     @BindView(R.id.empty_tracks)
@@ -64,8 +62,6 @@ public class TracksFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        refresh.setRefreshing(true);
-        refresh.setOnRefreshListener(this::refreshTracks);
         configureRecyclerView();
     }
 
@@ -78,7 +74,6 @@ public class TracksFragment extends BaseFragment {
     }
 
     private void updatedTracks(@NonNull final List<DisplayableItem> displayableItems) {
-        refresh.setRefreshing(false);
         adapter.update(displayableItems);
         if (displayableItems.isEmpty())
             showEmptyTracks();
