@@ -1,25 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refresh"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey_f3">
+    android:layout_height="match_parent">
 
-    <FrameLayout
+    <include
+        android:id="@+id/empty_tracks"
+        layout="@layout/partial_tracks_empty"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tracks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/empty_tracks"
-            layout="@layout/partial_tracks_empty"
-            android:visibility="visible" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/tracks"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="12dp"
-            android:visibility="gone" />
-    </FrameLayout>
-
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:layout_margin="12dp"
+        android:visibility="gone" />
+</FrameLayout>
