@@ -31,6 +31,7 @@ import com.tracker.ui.base.BaseFragment;
 import com.tracker.utils.ActivityUtils;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import pl.charmas.android.reactivelocation2.ReactiveLocationProvider;
 
@@ -43,6 +44,7 @@ public class TrackerFragment extends BaseFragment {
     private static final String TAG = TrackerFragment.class.getSimpleName();
 
     @Inject
+    @Named("TrackerViewModel")
     ViewModelProvider.Factory viewModelFactory;
     @Inject
     LocationRequest locationRequest;

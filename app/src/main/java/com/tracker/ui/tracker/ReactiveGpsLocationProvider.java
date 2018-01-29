@@ -10,10 +10,10 @@ import static com.tracker.ui.util.Constants.ACTION.STOP_TRACKER_ACTION;
 import static com.tracker.ui.util.Constants.ACTION.STOP_TRACKER_ACTION_FOREGROUND;
 import static com.tracker.utils.ActivityUtils.isServiceRunning;
 
-class ReactiveGpsLocationProvider implements LocationProvider {
+public class ReactiveGpsLocationProvider implements LocationProvider {
     private final Context context;
 
-    ReactiveGpsLocationProvider(@NonNull final Context context) {
+    public ReactiveGpsLocationProvider(@NonNull final Context context) {
         this.context = context;
     }
 
