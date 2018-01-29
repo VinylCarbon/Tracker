@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.tracker.common.providers.TimestampProvider;
 import com.tracker.common.providers.TrackNameProvider;
+import com.tracker.common.utils.DistanceUtils;
 import com.tracker.data.tracker.db.TrackDao;
 import com.tracker.data.tracker.db.TrackPointDao;
 import com.tracker.data.tracker.db.TrackPointRaw;
@@ -31,6 +32,7 @@ class DbTrackRepository implements TrackRepository {
     Option<Track> activeTrack = none();
     @NonNull
     TrackingState trackingState = NOT_TRACKING;
+    private long activeTrackDistanceInMeter = 0;
 
 
     private final PublishSubject<Track> currentTrackSubject = PublishSubject.create();
@@ -45,6 +47,8 @@ class DbTrackRepository implements TrackRepository {
     TimestampProvider timestampProvider;
     @Inject
     TrackNameProvider trackNameProvider;
+    @Inject
+    DistanceUtils distanceUtils;
 
     @Inject
     public DbTrackRepository() {
@@ -68,11 +72,11 @@ class DbTrackRepository implements TrackRepository {
     @Override
     public Single<Boolean> addTrackPoint(TrackPoint trackPoint) {
         return Observable.fromCallable(() -> {
-            this.trackPoint = Option.ofObj(trackPoint);
             trackPointSubject.onNext(trackPoint);
 
             if (trackingState.isTracking())
                 addToTrack(trackPoint);
+            this.trackPoint = Option.ofObj(trackPoint);
             return Boolean.TRUE;
         }).single(Boolean.FALSE);
     }
@@ -130,21 +134,32 @@ class DbTrackRepository implements TrackRepository {
     }
 
     private void trackingFinished() {
-        activeTrack.ifSome(track -> trackDao.update(new TrackRaw.Builder()
-                .id(track.id())
-                .name(track.name())
-                .startTime(track.startTime())
-                .finishTime(timestampProvider.currentTimeMillis())
-                .build()));
+        activeTrack
+                .ifSome(track ->
+                        trackDao.update(new TrackRaw.Builder()
+                                .id(track.id())
+                                .name(track.name())
+                                .startTime(track.startTime())
+                                .finishTime(timestampProvider.currentTimeMillis())
+                                .distance(activeTrackDistanceInMeter)
+                                .build()));
     }
 
     private void addToTrack(TrackPoint trackPoint) {
         if (activeTrack.isSome()) {
             getUnsafe(activeTrack).trackPoints().add(trackPoint);
             currentTrackSubject.onNext(getUnsafe(activeTrack));
+            this.trackPoint.ifSome(trackPoint1 -> updateActiveTrackDistance(trackPoint, trackPoint1));
 
             trackPointDao.insert(trackPointRaw(trackPoint));
         }
+
+    }
+
+    private void updateActiveTrackDistance(TrackPoint trackPoint, TrackPoint trackPoint1) {
+        activeTrackDistanceInMeter += (long) distanceUtils.distanceBetween(
+                trackPoint1.latitude(), trackPoint1.longitude(),
+                trackPoint.latitude(), trackPoint.longitude());
     }
 
     @NonNull
@@ -156,6 +171,7 @@ class DbTrackRepository implements TrackRepository {
     }
 
     private TrackRaw createTrackRaw() {
+        activeTrackDistanceInMeter = 0;
         return new TrackRaw.Builder()
                 .name(trackNameProvider.name())
                 .startTime(timestampProvider.currentTimeMillis())
@@ -168,6 +184,7 @@ class DbTrackRepository implements TrackRepository {
                 .name(trackRaw.getName())
                 .startTime(trackRaw.getStartTime())
                 .finishTime(trackRaw.getFinishTime())
+                .distanceInMeter(trackRaw.getDistance())
                 .trackPoints(new ArrayList<>())
                 .build();
     }

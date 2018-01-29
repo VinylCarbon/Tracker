@@ -18,6 +18,8 @@ public abstract class Track {
 
     public abstract long finishTime();
 
+    public abstract long distanceInMeter();
+
     @NonNull
     public abstract List<TrackPoint> trackPoints();
 
@@ -38,6 +40,8 @@ public abstract class Track {
         Track.Builder finishTime(final long finishTime);
 
         Track.Builder trackPoints(final List<TrackPoint> trackPoints);
+
+        Track.Builder distanceInMeter(long distanceInMeter);
 
         Track build();
     }

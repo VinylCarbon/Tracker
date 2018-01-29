@@ -15,6 +15,8 @@ public class TrackRaw {
 
     private long finishTime;
 
+    private long distance;
+
     public TrackRaw() {
     }
 
@@ -23,6 +25,7 @@ public class TrackRaw {
         setName(builder.name);
         setStartTime(builder.startTime);
         setFinishTime(builder.finishTime);
+        setDistance(builder.distance);
     }
 
     public long getId() {
@@ -57,12 +60,20 @@ public class TrackRaw {
         this.finishTime = finishTime;
     }
 
+    public long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(long distance) {
+        this.distance = distance;
+    }
 
     public static final class Builder {
         private long id;
         private String name;
         private long startTime;
         private long finishTime;
+        private long distance;
 
         public Builder() {
         }
@@ -84,6 +95,11 @@ public class TrackRaw {
 
         public Builder finishTime(long val) {
             finishTime = val;
+            return this;
+        }
+
+        public Builder distance(long val) {
+            distance = val;
             return this;
         }
 
