@@ -31,6 +31,9 @@
             android:name=".ui.tracks.TracksActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.trackdetail.TrackDetailActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".ui.tracker.TrackerService" />
 
