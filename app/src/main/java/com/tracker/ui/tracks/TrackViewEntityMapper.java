@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.tracker.R;
+import com.tracker.common.utils.DistanceFormatter;
+import com.tracker.common.utils.SpeedFormatter;
 import com.tracker.common.utils.TimeUtils;
 import com.tracker.data.tracker.Track;
 import com.tracker.ui.providers.StringProvider;
@@ -11,6 +13,8 @@ import com.tracker.ui.providers.StringProvider;
 import javax.inject.Inject;
 
 import io.reactivex.functions.Function;
+
+import static com.tracker.common.utils.DistanceFormatter.DistanceUnits.KILOMETERS;
 
 public class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
 
@@ -64,13 +68,22 @@ public class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
 
     @NonNull
     private String mapToFormattedDistance(Track track) {
-        // TODO: calculate formattedDistance.
-        return "";
+        if (track.distanceInMeter() == 0)
+            return "";
+
+        return stringProvider.getStringAndApplySubstitutions(R.string.track_formatted_distance,
+                Pair.create("distance", DistanceFormatter.format((int) track.distanceInMeter(), KILOMETERS)));
     }
 
     @NonNull
     private String mapToFormattedSpeed(Track track) {
-        // TODO: calculate speed.
-        return "";
+        if (track.distanceInMeter() == 0)
+            return "";
+        return stringProvider.getStringAndApplySubstitutions(R.string.track_formatted_speed,
+                Pair.create("speed", formattedSpeed(track)));
+    }
+
+    private String formattedSpeed(Track track) {
+        return SpeedFormatter.format(track.distanceInMeter(), (track.finishTime() - track.startTime()) * 1000);
     }
 }

@@ -114,15 +114,11 @@ public class TrackDetailFragment extends BaseFragment {
         if (trackPoints.isEmpty())
             return;
 
-        try {
-            LatLngBounds latLngBounds = new LatLngBounds(
-                    latLng(trackPoints.get(0)),
-                    latLng(trackPoints.get(trackPoints.size() - 1)));
-            map.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
-            map.animateCamera(CameraUpdateFactory.zoomTo(15));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                .include(latLng(trackPoints.get(0)))
+                .include(latLng(trackPoints.get(trackPoints.size() - 1)))
+                .build();
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 20));
     }
 
     @SuppressLint("MissingPermission")
