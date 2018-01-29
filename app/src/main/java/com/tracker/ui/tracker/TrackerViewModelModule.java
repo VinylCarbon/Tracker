@@ -1,4 +1,4 @@
-package com.tracker.ui;
+package com.tracker.ui.tracker;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
@@ -26,22 +26,6 @@ public class TrackerViewModelModule {
     @Named("TrackerViewModel")
     static ViewModelProvider.Factory trackerViewModelProviderFactory(ViewModelUtil viewModelUtil,
                                                               TrackerViewModel trackerViewModel) {
-        return viewModelUtil.createFor(trackerViewModel);
-    }
-
-    @Singleton
-    @Provides
-    @Named("TracksViewModel")
-    static ViewModelProvider.Factory tracksViewModelProviderFactory(ViewModelUtil viewModelUtil,
-                                                              TracksViewModel trackerViewModel) {
-        return viewModelUtil.createFor(trackerViewModel);
-    }
-
-    @Singleton
-    @Provides
-    @Named("TrackDetailViewModel")
-    static ViewModelProvider.Factory trackDetailViewModelProviderFactory(ViewModelUtil viewModelUtil,
-                                                              TrackDetailViewModel trackerViewModel) {
         return viewModelUtil.createFor(trackerViewModel);
     }
 
