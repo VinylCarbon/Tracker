@@ -9,7 +9,7 @@ public interface TrackRepository {
 
     Observable<TrackPoint> trackPoint();
 
-    Observable<Track> track();
+    Observable<Track> currentTrack();
 
     Observable<TrackingState> trackingState();
 
@@ -18,4 +18,8 @@ public interface TrackRepository {
     Single<Boolean> setTrackingState(boolean tracking);
 
     Observable<List<Track>> allTracks();
+
+    Observable<Track> track(long trackId);
+
+    Observable<List<TrackPoint>> trackPoints(long trackId);
 }

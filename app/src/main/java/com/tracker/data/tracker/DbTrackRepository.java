@@ -33,7 +33,7 @@ class DbTrackRepository implements TrackRepository {
     TrackingState trackingState = NOT_TRACKING;
 
 
-    private final PublishSubject<Track> trackSubject = PublishSubject.create();
+    private final PublishSubject<Track> currentTrackSubject = PublishSubject.create();
     private final PublishSubject<TrackPoint> trackPointSubject = PublishSubject.create();
     private final PublishSubject<TrackingState> trackingStateSubject = PublishSubject.create();
 
@@ -56,8 +56,8 @@ class DbTrackRepository implements TrackRepository {
     }
 
     @Override
-    public Observable<Track> track() {
-        return trackSubject;
+    public Observable<Track> currentTrack() {
+        return currentTrackSubject;
     }
 
     @Override
@@ -98,6 +98,23 @@ class DbTrackRepository implements TrackRepository {
 
     }
 
+    @Override
+    public Observable<Track> track(long trackId) {
+        return trackDao.track(trackId)
+                .toObservable()
+                .map(this::track);
+    }
+
+    @Override
+    public Observable<List<TrackPoint>> trackPoints(long trackId) {
+        return trackPointDao.allTrackPoints(trackId)
+                .toObservable()
+                .map(trackPointRaws -> Observable.fromIterable(trackPointRaws)
+                        .map(this::trackPoint)
+                        .toList()
+                        .blockingGet());
+    }
+
     public void startTracking() {
         trackingState = TRACKING;
         trackingStateSubject.onNext(TRACKING);
@@ -124,7 +141,7 @@ class DbTrackRepository implements TrackRepository {
     private void addToTrack(TrackPoint trackPoint) {
         if (activeTrack.isSome()) {
             getUnsafe(activeTrack).trackPoints().add(trackPoint);
-            trackSubject.onNext(getUnsafe(activeTrack));
+            currentTrackSubject.onNext(getUnsafe(activeTrack));
 
             trackPointDao.insert(trackPointRaw(trackPoint));
         }
@@ -161,6 +178,14 @@ class DbTrackRepository implements TrackRepository {
                 .longitude(trackPoint.longitude())
                 .timestamp(trackPoint.timestamp())
                 .trackId(getUnsafe(activeTrack).id())
+                .build();
+    }
+
+    private TrackPoint trackPoint(TrackPointRaw trackPointRaw) {
+        return TrackPoint.builder()
+                .latitude(trackPointRaw.getLatitude())
+                .longitude(trackPointRaw.getLongitude())
+                .timestamp(trackPointRaw.getTimestamp())
                 .build();
     }
 }

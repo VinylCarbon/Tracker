@@ -27,4 +27,7 @@ public interface TrackDao {
 
     @Query("SELECT * FROM TRACKRAW ORDER BY id DESC")
     Flowable<List<TrackRaw>> allTracks();
+
+    @Query("SELECT * FROM TRACKRAW WHERE id = :trackId LIMIT 1")
+    Flowable<TrackRaw> track(long trackId);
 }
