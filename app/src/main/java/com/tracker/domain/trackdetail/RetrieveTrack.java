@@ -1,4 +1,4 @@
-package com.tracker.domain.tracker;
+package com.tracker.domain.trackdetail;
 
 import android.support.annotation.NonNull;
 
@@ -12,7 +12,9 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import polanski.option.Option;
 
-public class RetrieveTrack implements ReactiveInteractor.RetrieveInteractor<Void, Track> {
+import static polanski.option.OptionUnsafe.getUnsafe;
+
+public class RetrieveTrack implements ReactiveInteractor.RetrieveInteractor<Long, Track> {
 
     @NonNull
     private final TrackRepository trackRepository;
@@ -24,7 +26,7 @@ public class RetrieveTrack implements ReactiveInteractor.RetrieveInteractor<Void
 
     @Nonnull
     @Override
-    public Observable<Track> getBehaviourStream(@Nonnull final Option<Void> params) {
-        return trackRepository.currentTrack();
+    public Observable<Track> getBehaviourStream(@Nonnull final Option<Long> trackId) {
+        return trackRepository.track(getUnsafe(trackId));
     }
 }
