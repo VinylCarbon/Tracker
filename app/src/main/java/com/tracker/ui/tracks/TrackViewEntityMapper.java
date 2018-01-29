@@ -84,6 +84,6 @@ public class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
     }
 
     private String formattedSpeed(Track track) {
-        return SpeedFormatter.format(track.distanceInMeter(), (track.finishTime() - track.startTime()) * 1000);
+        return SpeedFormatter.format(track.distanceInMeter(), (track.finishTime() - track.startTime()) / 1000);
     }
 }

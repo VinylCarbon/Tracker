@@ -122,7 +122,7 @@ public class TrackerService extends Service {
                 .setTicker("Tracker")
                 .setContentText("Tracking path")
                 .setOngoing(true)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.ic_track)
                 .setContentIntent(pendingIntent)
                 .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .addAction(R.drawable.stop, "Stop Tracking", pendingStopIntent)
