@@ -1,6 +1,7 @@
 package com.tracker.ui.tracks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.tracker.di.qualifiers.ForApplication;
 import com.tracker.ui.recyclerview.DisplayableItem;
 import com.tracker.ui.recyclerview.ViewHolderBinder;
 import com.tracker.ui.recyclerview.ViewHolderFactory;
+import com.tracker.ui.trackdetail.TrackDetailActivity;
 
 import javax.inject.Inject;
 
@@ -29,13 +31,23 @@ public class TrackViewHolder extends RecyclerView.ViewHolder {
     TextView trackDistance;
     @BindView(R.id.track_speed)
     TextView trackSpeed;
+    private TrackViewEntity viewEntity;
 
     public TrackViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        itemView.setOnClickListener(this::trackItemSelected);
+    }
+
+    private void trackItemSelected(View view) {
+        Intent trackDetailIntent = new Intent(view.getContext(), TrackDetailActivity.class);
+        trackDetailIntent.putExtra(TrackDetailActivity.EXTRA_TRACK_ID, viewEntity.id());
+        trackDetailIntent.putExtra(TrackDetailActivity.EXTRA_TRACK_NAME, viewEntity.name());
+        view.getContext().startActivity(trackDetailIntent);
     }
 
     private void bind(@NonNull final TrackViewEntity viewEntity) {
+        this.viewEntity = viewEntity;
         trackName.setText(viewEntity.name());
         trackTime.setText(viewEntity.formattedTime());
         trackDistance.setText(viewEntity.formattedDistance());
