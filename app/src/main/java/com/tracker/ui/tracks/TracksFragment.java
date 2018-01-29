@@ -1,10 +1,10 @@
 package com.tracker.ui.tracks;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,11 +13,11 @@ import com.tracker.R;
 import com.tracker.ui.base.BaseFragment;
 import com.tracker.ui.recyclerview.DisplayableItem;
 import com.tracker.ui.recyclerview.RecyclerViewAdapter;
-import com.tracker.ui.util.ViewModelUtil;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,9 +30,8 @@ public class TracksFragment extends BaseFragment {
     @Inject
     RecyclerViewAdapter adapter;
     @Inject
-    ViewModelUtil viewModelUtil;
-    @Inject
-    TracksViewModel tracksViewModel;
+    @Named("TracksViewModel")
+    ViewModelProvider.Factory viewModelFactory;
 
 
     @BindView(R.id.tracks)
@@ -53,8 +52,7 @@ public class TracksFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        TracksViewModel viewModel = ViewModelProviders.of(this, viewModelUtil.createFor(tracksViewModel))
-                .get(TracksViewModel.class);
+        TracksViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(TracksViewModel.class);
         viewModel.getTrackListLiveData().observe(this, this::updatedTracks);
     }
 
@@ -63,9 +61,6 @@ public class TracksFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         configureRecyclerView();
-    }
-
-    private void refreshTracks() {
     }
 
     private void configureRecyclerView() {
