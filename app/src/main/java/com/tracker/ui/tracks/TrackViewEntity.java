@@ -5,18 +5,18 @@ import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-abstract class TrackViewEntity {
+public abstract class TrackViewEntity {
 
     abstract long id();
 
     @NonNull
-    abstract String name();
+    public abstract String name();
 
     @NonNull
     abstract String formattedCreatedOn();
 
     @NonNull
-    abstract String formattedTime();
+    public abstract String formattedTime();
 
     @NonNull
     abstract String formattedStartTime();
@@ -25,10 +25,10 @@ abstract class TrackViewEntity {
     abstract String formattedFinishTime();
 
     @NonNull
-    abstract String formattedDistance();
+    public abstract String formattedDistance();
 
     @NonNull
-    abstract String formattedSpeed();
+    public abstract String formattedSpeed();
 
     public static Builder builder() {
         return new AutoValue_TrackViewEntity.Builder();

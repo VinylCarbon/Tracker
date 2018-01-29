@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.functions.Function;
 
-class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
+public class TrackViewEntityMapper implements Function<Track, TrackViewEntity> {
 
     private final String TRACK_DATE_FORMAT_CREATED_ON = "MMM dd yy";
     private final String TRACK_TIME_FORMAT = "hh:mm a";

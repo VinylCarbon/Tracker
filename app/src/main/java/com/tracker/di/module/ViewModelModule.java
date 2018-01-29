@@ -1,6 +1,6 @@
 package com.tracker.di.module;
 
-import com.tracker.ui.TrackerViewModelModule;
+import com.tracker.ui.tracker.TrackerViewModelModule;
 
 import dagger.Module;
 

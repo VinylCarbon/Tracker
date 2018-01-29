@@ -31,6 +31,7 @@ public class TrackViewHolder extends RecyclerView.ViewHolder {
     TextView trackDistance;
     @BindView(R.id.track_speed)
     TextView trackSpeed;
+
     private TrackViewEntity viewEntity;
 
     public TrackViewHolder(View itemView) {

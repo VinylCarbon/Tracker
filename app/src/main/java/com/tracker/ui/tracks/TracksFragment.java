@@ -1,6 +1,5 @@
 package com.tracker.ui.tracks;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,11 +12,11 @@ import com.tracker.R;
 import com.tracker.ui.base.BaseFragment;
 import com.tracker.ui.recyclerview.DisplayableItem;
 import com.tracker.ui.recyclerview.RecyclerViewAdapter;
+import com.tracker.ui.util.ViewModelUtil;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,9 +29,9 @@ public class TracksFragment extends BaseFragment {
     @Inject
     RecyclerViewAdapter adapter;
     @Inject
-    @Named("TracksViewModel")
-    ViewModelProvider.Factory viewModelFactory;
-
+    ViewModelUtil viewModelUtil;
+    @Inject
+    TracksViewModel trackerViewModel;
 
     @BindView(R.id.tracks)
     RecyclerView trackList;
@@ -52,7 +51,7 @@ public class TracksFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        TracksViewModel viewModel = ViewModelProviders.of(this, viewModelFactory).get(TracksViewModel.class);
+        TracksViewModel viewModel = ViewModelProviders.of(this, viewModelUtil.createFor(trackerViewModel)).get(TracksViewModel.class);
         viewModel.getTrackListLiveData().observe(this, this::updatedTracks);
     }
 
