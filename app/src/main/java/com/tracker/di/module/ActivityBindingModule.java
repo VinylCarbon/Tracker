@@ -2,6 +2,8 @@ package com.tracker.di.module;
 
 import com.tracker.di.scope.ActivityScope;
 import com.tracker.ui.home.HomeActivity;
+import com.tracker.ui.trackdetail.TrackDetailActivity;
+import com.tracker.ui.trackdetail.TrackDetailModule;
 import com.tracker.ui.tracker.TrackerModule;
 import com.tracker.ui.tracks.TracksActivity;
 import com.tracker.ui.tracks.TracksModule;
@@ -20,4 +22,7 @@ public abstract class ActivityBindingModule {
     @ContributesAndroidInjector(modules = {TracksModule.class})
     abstract TracksActivity tracksActivity();
 
+    @ActivityScope
+    @ContributesAndroidInjector(modules = {TrackDetailModule.class})
+    abstract TrackDetailActivity trackDetailActivity();
 }
