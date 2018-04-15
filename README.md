@@ -2,7 +2,7 @@
 
 A simple location tracker application to track user movements in background and updates the UI(map, lists) in reactive way.
 
-# Screenshopts
+# Screenshots
 
 ![](https://image.ibb.co/csgpJb/1.png)    ![](https://image.ibb.co/iU3Qrw/2.png)
 ![](https://image.ibb.co/jD2JBw/3.png)    ![](https://image.ibb.co/h3irWw/4.png)
